@@ -20,30 +20,47 @@ MongoClient.connect(connectionURL, {useNewUrlParser: true}, (error, client) => {
 
     const db = client.db(databaseName)
 
-    // FETCH ONE FIELD FROM DATABASE
-    // db.collection('users').findOne({name: 'Beyza', age: 21, _id: new ObjectID("61046335254aad302b3ef0cd")}, (error, user) => {
-    //     if (error) {
-    //         return console.log('unable to fetch')
+    
+    // const updatePromise = db.collection('users').updateOne({
+    //     _id: new ObjectID("61046335254aad302b3ef0cd")
+    // }, {
+    //     $set: {
+    //         name: 'Mike'
     //     }
-
-    //     console.log(user)
     // })
-    // FETCH MULTIPLE FIELDS FROM DATABASE
-    // db.collection('users').find({age: 21}).toArray((error, users) => {
-    //     console.log(users)
+    // updatePromise.then((result) => {
+    //     console.log(result)
+    // }).catch((error) => {
+    //     console.log(error)
     // })
-    // db.collection('users').find({age: 21}).count((error, count) => {
-    //     console.log(count)
-    // })
-
-    db.collection('tasks').findOne({_id: new ObjectID("6104652afd41ad3047524222")}, (error, task) => {
-        if (error) {
-            return console.log('unable to fetch')
+    // instead of above, we can use below mostly:
+    
+    // UPDATE ONE FIELD FROM DATABASE
+    db.collection('users').updateOne({
+        _id: new ObjectID("61046335254aad302b3ef0cd")
+    }, {
+        $set: {
+            name: 'Mikee'
+        },
+        $inc: {
+            age: 1
         }
-        console.log(task)
+    }).then((result) => {
+        console.log(result)
+    }).catch((error) => {
+        console.log(error)
     })
-    db.collection('tasks').find({completed: false }).toArray((error, my_tasks) => {
-        console.log(my_tasks)
+    // UPDATE MULTIPLE FIELDS FROM DATABASE
+    db.collection('tasks').updateMany({
+        completed: false
+    }, {
+        $set: {
+            completed: true
+        }
+    }).then((result) => {
+        console.log(result.modifiedCount)
+    }).catch((error) => {
+        console.log(error)
     })
 
 })
