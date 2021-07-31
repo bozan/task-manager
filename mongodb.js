@@ -11,10 +11,6 @@ const {MongoClient, ObjectID} = require('mongodb')
 const connectionURL = 'mongodb://127.0.0.1:27017'
 const databaseName = 'task-manager'
 
-const id = new ObjectID()
-console.log(id)
-console.log(id.id) // it gives binary id information
-console.log(id.getTimestamp())
 
 MongoClient.connect(connectionURL, {useNewUrlParser: true}, (error, client) => {
     if (error) {
@@ -24,52 +20,30 @@ MongoClient.connect(connectionURL, {useNewUrlParser: true}, (error, client) => {
 
     const db = client.db(databaseName)
 
-    // INSERT ONE USER 
-    db.collection('users').insertOne({
-        _id: id,
-        name:'BBA',
-        age: 21
-    }, (error, result) => {
+    // FETCH ONE FIELD FROM DATABASE
+    // db.collection('users').findOne({name: 'Beyza', age: 21, _id: new ObjectID("61046335254aad302b3ef0cd")}, (error, user) => {
+    //     if (error) {
+    //         return console.log('unable to fetch')
+    //     }
+
+    //     console.log(user)
+    // })
+    // FETCH MULTIPLE FIELDS FROM DATABASE
+    // db.collection('users').find({age: 21}).toArray((error, users) => {
+    //     console.log(users)
+    // })
+    // db.collection('users').find({age: 21}).count((error, count) => {
+    //     console.log(count)
+    // })
+
+    db.collection('tasks').findOne({_id: new ObjectID("6104652afd41ad3047524222")}, (error, task) => {
         if (error) {
-            return console.log('Unable to insert user! ')
+            return console.log('unable to fetch')
         }
-        console.log(result.ops)
+        console.log(task)
+    })
+    db.collection('tasks').find({completed: false }).toArray((error, my_tasks) => {
+        console.log(my_tasks)
     })
 
-//     // INSERT MULTIPLE USERS
-//     db.collection('users').insertMany([
-//         {
-//             name: 'Oltan',
-//             age: 19
-//         },
-//         {
-//             name: 'Andrew',
-//             age: 27
-//         }
-//     ], (error, result) => {
-//         if (error) {
-//             return console.log('Unable to insert users!')
-//         }
-//         console.log(result.ops)
-
-//     })
-
-    // INSERT MULTIPLE TASKS (CHALLANGE)
-//     db.collection('tasks').insertMany([
-//         {
-//             description: 'my first task',
-//             completed: true
-//         }, {
-//             description: 'my second task',
-//             completed: false
-//         }, {
-//             description: 'third task',
-//             completed: false
-//         }
-//     ], (error, result) => {
-//         if (error) {
-//             return console.log('Unable to insert tasks!')
-//         }
-//         console.log(result.ops)
-//     })
 })
