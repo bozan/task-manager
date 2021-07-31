@@ -20,45 +20,20 @@ MongoClient.connect(connectionURL, {useNewUrlParser: true}, (error, client) => {
 
     const db = client.db(databaseName)
 
-    
-    // const updatePromise = db.collection('users').updateOne({
-    //     _id: new ObjectID("61046335254aad302b3ef0cd")
-    // }, {
-    //     $set: {
-    //         name: 'Mike'
-    //     }
-    // })
-    // updatePromise.then((result) => {
-    //     console.log(result)
-    // }).catch((error) => {
-    //     console.log(error)
-    // })
-    // instead of above, we can use below mostly:
-    
-    // UPDATE ONE FIELD FROM DATABASE
-    db.collection('users').updateOne({
-        _id: new ObjectID("61046335254aad302b3ef0cd")
-    }, {
-        $set: {
-            name: 'Mikee'
-        },
-        $inc: {
-            age: 1
-        }
+    // DELETE MULTIPLE DATA FROM DATABASE
+   db.collection('users').deleteMany({
+       age: 21
+   }).then((result) => {
+       console.log(result)
+   }).catch((error) => {
+       console.log(error)
+   })
+
+    // DELETE ONE DATA FROM DATABASE
+    db.collection('tasks').deleteOne({
+        description: "my second task"
     }).then((result) => {
         console.log(result)
-    }).catch((error) => {
-        console.log(error)
-    })
-    // UPDATE MULTIPLE FIELDS FROM DATABASE
-    db.collection('tasks').updateMany({
-        completed: false
-    }, {
-        $set: {
-            completed: true
-        }
-    }).then((result) => {
-        console.log(result.modifiedCount)
     }).catch((error) => {
         console.log(error)
     })
