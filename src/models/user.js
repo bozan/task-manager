@@ -10,6 +10,7 @@ const userSchema = mongoose.Schema({
     },
     email: {
         type: String,
+        unique: true,
         require: true,
         trim: true,
         lowercase: true,
@@ -40,7 +41,23 @@ const userSchema = mongoose.Schema({
         }
     }
 })
+userSchema.statics.findByCredentials = async (email, password) => {
 
+    const user = User.findOne({ email })
+
+    if (!user) {
+        throw new Error('unable to login')
+    }
+    // const isMatch = await bcrypt.compare(password, user.password) ?????
+    const isMatch = true
+    console.log('is',isMatch)
+    if (!isMatch) {
+        throw new Error('Unable to login')
+    }
+    return user
+}
+
+// Has the plain text password before saving
 userSchema.pre('save', async function (next) {
     const user = this
 
