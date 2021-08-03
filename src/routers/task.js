@@ -18,20 +18,27 @@ router.post('/tasks', auth, async (req, res) => {
     } 
 })
 // GET ALL TASKS
+// GET /tasks?completed=true
+// GET /tasks?limit=10&skip=0
 router.get('/tasks', auth, async (req, res) => {
-    const match = {}
-    if (req.query.completed) {
-        match.completed = req.query.completed === 'true'
-    }
-    try {
-        if (match.completed === undefined) {
-            const users = await Task.find({owner: req.user._id})
-            res.send(users)
-        } else {
-            const users = await Task.find({owner: req.user._id, completed: match.completed})
-            res.send(users)
+        const match = {}
+
+        if (req.query.completed) {
+            match.completed = req.query.completed === 'true'
         }
-        
+    
+        try {
+            await req.user.populate({
+                path: 'myTasks',
+                match,
+                options: {
+                    limit: parseInt(req.query.limit),
+                    skip: parseInt(req.query.skip)
+                }
+            }).execPopulate()
+            console.log(req.user)
+            res.send(req.user.myTasks)
+
     } catch (e) {
         res.status(500).send(e)
     }
