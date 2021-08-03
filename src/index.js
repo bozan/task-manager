@@ -15,9 +15,9 @@ const port = process.env.PORT || 3000
 //     }
 // })
 // middleware function 2 (maintenance mode)
-app.use((req, res, next) => {
-    res.status(503).send('The web-site is in maintenance, check back soon')
-})
+// app.use((req, res, next) => {
+//     res.status(503).send('The web-site is in maintenance, check back soon')
+// })
 // without middleware:  new request -> run route handler
 // with middleware:  new request -> do something -> run route handler
 
