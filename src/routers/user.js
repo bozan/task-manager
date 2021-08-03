@@ -12,7 +12,7 @@ router.post('/users', async (req, res) => {
         const token = jwt.sign({ _id: new_user._id.toString() }, 'thisismynewcourse')
         new_user.tokens = new_user.tokens.concat({ token })
         await new_user.save()
-        res.status(201).send(new_user)
+        res.status(201).send({new_user, token})
 
     } catch (e) {
         res.status(400).send(e)

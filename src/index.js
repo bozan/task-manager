@@ -33,3 +33,17 @@ app.listen(port, () => {
     console.log('Server is up on port ' + port)
 })
 
+const Task = require('./models/task')
+const User = require('./models/user')
+
+const main = async () => {
+    // const task = await Task.findById('610927913db7ec6ca5885a5a')
+    // await task.populate('owner').execPopulate()  ??? TypeError: Cannot read property 'populate' of null
+    // console.log(task.owner)
+
+    // const user = await User.findById('610927913db7ec6ca5885a5a')
+    // await user.populate('myTasks').execPopulate()
+    // console.log(user.myTasks)
+}
+
+main()
