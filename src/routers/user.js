@@ -8,6 +8,8 @@ router.post('/users', async (req, res) => {
     const new_user = new User(req.body)
 
     try {
+        const token = jwt.sign({ _id: new_user._id.toString() }, 'thisismynewcourse')
+        new_user.tokens = new_user.tokens.concat({ token })
         await new_user.save()
         res.status(201).send(new_user)
 
@@ -20,6 +22,8 @@ router.post('/users/login', async (req, res) => {
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password)
         const token = jwt.sign({ _id: user._id.toString() }, 'thisismynewcourse')
+        user.tokens = user.tokens.concat({ token })
+        await user.save()
         //const token = await User.generateAuthToken()
         res.send({user,token})
     } catch (e) {

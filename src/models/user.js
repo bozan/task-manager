@@ -40,7 +40,13 @@ const userSchema = mongoose.Schema({
                 throw new Error('Age must be a positive number')
             }
         }
-    }
+    },
+    tokens: [{
+        token: {
+            type: String,
+            require: true
+        }
+    }]
 })
 
 // userSchema.methods.generateAuthToken =  async function () { // to use this
