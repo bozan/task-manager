@@ -3,15 +3,18 @@ const multer = require('multer')
 const sharp = require('sharp')
 const User = require('../models/user')
 const auth = require('../middleware/auth')
-const router = new express.Router()
 const jwt = require('jsonwebtoken')
+const { sendWelcomeEmail, cancelationEmail} =  require('../emails/account') 
+const router = new express.Router()
+
 
 // CREATE A USER
 router.post('/users', async (req, res) => {
     const new_user = new User(req.body)
 
     try {
-        const token = jwt.sign({ _id: new_user._id.toString() }, 'thisismynewcourse')
+        sendWelcomeEmail(new_user.email, new_user.name)
+        const token = jwt.sign({ _id: new_user._id.toString() }, process.env.JWT_SECRET)
         new_user.tokens = new_user.tokens.concat({ token })
         await new_user.save()
         res.status(201).send({new_user, token})
@@ -24,7 +27,7 @@ router.post('/users', async (req, res) => {
 router.post('/users/login', async (req, res) => {
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password)
-        const token = jwt.sign({ _id: user._id.toString() }, 'thisismynewcourse')
+        const token = jwt.sign({ _id: user._id.toString() }, process.env.JWT_SECRET)
         user.tokens = user.tokens.concat({ token })
         await user.save()
         //const token = await User.generateAuthToken()
@@ -104,6 +107,7 @@ router.patch('/users/me', auth, async (req, res) => {
 router.delete('/users/me', auth, async (req, res) => {
     try {
         await req.user.remove()
+        cancelationEmail(req.user.email, req.user.name)
         res.send(req.user)
 
     } catch (e) {
